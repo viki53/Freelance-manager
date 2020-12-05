@@ -17,7 +17,6 @@ class CreateCountriesTable extends Migration
             $table->string('code', 2)->primary();
             $table->string('name', 50)->unique();
             $table->string('phone_prefix', 4)->index();
-            $table->timestamps();
         });
     }
 

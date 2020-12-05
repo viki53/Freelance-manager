@@ -17,7 +17,7 @@ class CreateCompaniesTable extends Migration
             $table->uuid('id')->primary();
             $table->string('name')->index();
             $table->unsignedBigInteger('owner_id');
-            $table->unsignedBigInteger('headquarters_address_id');
+            $table->uuid('headquarters_address_id')->nullable();
             $table->timestamps();
 
             $table->foreign('owner_id')->references('id')->on('users');
