@@ -9,6 +9,8 @@ class ItemType extends Model
 {
     use HasFactory;
 
+    protected $table = 'item_types';
+
     public $timestamps = false;
 
     protected $fillable = [

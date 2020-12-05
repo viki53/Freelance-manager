@@ -27,6 +27,33 @@ class Invoice extends Model
         'discount' => 'decimal:2',
     ];
 
+    public function getUntaxedTotalAttribute() {
+        $total = 0;
+        $this->loadMissing('items');
+        foreach ($this->items as $item) {
+            $total += $item->untaxed_price;
+        }
+        return $total;
+    }
+
+    public function getTaxesTotalAttribute() {
+        $total = 0;
+        $this->loadMissing('items');
+        foreach ($this->items as $item) {
+            $total += $item->taxes_price;
+        }
+        return $total;
+    }
+
+    public function getTaxedTotalAttribute() {
+        $total = 0;
+        $this->loadMissing('items');
+        foreach ($this->items as $item) {
+            $total += $item->taxed_price;
+        }
+        return $total;
+    }
+
     public function company() {
         return $this->belongsTo(Company::class, 'company_id', 'id');
     }

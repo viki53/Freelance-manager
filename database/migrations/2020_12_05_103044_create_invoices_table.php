@@ -16,9 +16,9 @@ class CreateInvoicesTable extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('company_id');
-            $table->decimal('rebate_percentage', 4, 2);
-            $table->decimal('rebate_amount', 10, 2);
-            $table->decimal('discount', 4, 2);
+            $table->decimal('rebate_percentage', 4, 2)->nullable();
+            $table->decimal('rebate_amount', 10, 2)->nullable();
+            $table->decimal('discount', 4, 2)->nullable();
             $table->timestamps();
             $table->softDeletes();
 

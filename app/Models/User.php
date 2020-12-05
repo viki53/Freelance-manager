@@ -62,4 +62,10 @@ class User extends Authenticatable
     public function companies() {
         return $this->hasMany(Company::class, 'owner_id', 'id');
     }
+
+    public function getDefaultCompanyAttribute() {
+        return $this->companies()->first();
+    }
+
+
 }

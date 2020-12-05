@@ -17,7 +17,7 @@ class CreateInvoiceItemsTable extends Migration
             $table->uuid('id')->primary();
             $table->uuid('invoice_id');
             $table->string('label');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->decimal('quantity', 8, 2);
             $table->decimal('unit_price', 8, 2);
             $table->unsignedBigInteger('item_type_id');
