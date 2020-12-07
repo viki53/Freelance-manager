@@ -27,6 +27,15 @@ class Invoice extends Model
         'discount' => 'decimal:2',
     ];
 
+    public function getQuantityTotalAttribute() {
+        $total = 0;
+        $this->loadMissing('items');
+        foreach ($this->items as $item) {
+            $total += $item->quantity;
+        }
+        return $total;
+    }
+
     public function getUntaxedTotalAttribute() {
         $total = 0;
         $this->loadMissing('items');

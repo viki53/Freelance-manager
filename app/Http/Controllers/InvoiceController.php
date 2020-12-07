@@ -17,7 +17,7 @@ class InvoiceController extends Controller
 {
     public function list(Request $request) {
         $company = $request->user()->default_company;
-        $invoices = $company->invoices()->withCount('items')->get();
+        $invoices = $company->invoices()->with('items')->withCount('items')->get();
 
         return view('invoices.list', [
             'company' => $company,
