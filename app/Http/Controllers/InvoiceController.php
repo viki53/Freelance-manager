@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 use App\Http\Requests\InvoiceCreateRequest;
+use App\Http\Requests\InvoiceUpdateRequest;
 use App\Http\Requests\InvoiceItemCreateRequest;
 
 use App\Models\Company;
@@ -23,23 +25,38 @@ class InvoiceController extends Controller
         ]);
     }
 
+    public function create(InvoiceCreateRequest $request) {
+        $invoice = Invoice::create([
+            'company_id' => $request->user()->company->id,
+        ]);
+
+        return redirect()->route('invoices.show', ['invoice' => $invoice]);
+    }
+
     public function show(Invoice $invoice, Request $request) {
-        $invoice->load(['company', 'items'])->loadCount('items');
+        $invoice->load(['company', 'customer', 'items']);
 
         $itemTypes = ItemType::get();
         $taxRates = TaxRate::get();
 
         return view('invoices.show', [
+            'user' => $request->user(),
             'invoice' => $invoice,
             'itemTypes' => $itemTypes,
             'taxRates' => $taxRates,
         ]);
     }
 
-    public function create(InvoiceCreateRequest $request) {
-        $invoice = Invoice::create([
-            'company_id' => $request->user()->default_company->id,
-        ]);
+    public function update(Invoice $invoice, InvoiceUpdateRequest $request) {
+        $invoice->customer_id = $request->customer_id;
+        $invoice->save();
+
+        return redirect()->route('invoices.show', ['invoice' => $invoice]);
+    }
+
+    public function send(Invoice $invoice, Request $request) {
+        $invoice->sent_at = Carbon::now();
+        $invoice->save();
 
         return redirect()->route('invoices.show', ['invoice' => $invoice]);
     }
@@ -54,6 +71,7 @@ class InvoiceController extends Controller
             'item_type_id' => $request->item_type_id,
             'tax_rate_id' => $request->tax_rate_id,
         ]);
+        $invoice->save();
 
         return redirect()->route('invoices.show', ['invoice' => $invoice]);
     }

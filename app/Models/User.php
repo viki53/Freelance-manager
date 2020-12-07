@@ -59,12 +59,8 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
-    public function companies() {
-        return $this->hasMany(Company::class, 'owner_id', 'id');
-    }
-
-    public function getDefaultCompanyAttribute() {
-        return $this->companies()->first();
+    public function company() {
+        return $this->hasOne(Company::class, 'owner_id', 'id');
     }
 
     public function invoices() {

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 use App\Models\Concerns\UsesUuid;
 
@@ -25,6 +26,7 @@ class Invoice extends Model
         'rebate_percentage' => 'decimal:2',
         'rebate_amount' => 'decimal:2',
         'discount' => 'decimal:2',
+        'sent_at' => 'datetime',
     ];
 
     public function getQuantityTotalAttribute() {
@@ -63,8 +65,20 @@ class Invoice extends Model
         return $total;
     }
 
+    public function getIsSentAttribute() {
+        return !empty($this->sent_at);
+    }
+
+    public function getReadyToSendAttribute() {
+        return empty($this->sent_at) && !empty($this->customer_id);
+    }
+
     public function company() {
         return $this->belongsTo(Company::class, 'company_id', 'id');
+    }
+
+    public function customer() {
+        return $this->belongsTo(Company::class, 'customer_id', 'id');
     }
 
     public function items() {

@@ -13,7 +13,7 @@ class InvoiceCreateRequest extends FormRequest
      */
     public function authorize()
     {
-        return !empty($this->user()->default_company);
+        return !empty($this->user()->company);
     }
 
     /**

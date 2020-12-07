@@ -13,7 +13,7 @@ class CompanyCreateRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return empty($this->user()->company);
     }
 
     /**

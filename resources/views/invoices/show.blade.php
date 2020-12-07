@@ -1,18 +1,38 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            @if(!empty($company))
-            <a href="{{ route('companies.show', ['company' => $company]) }}">{{ $company->name }}</a> >
-            <a href="{{ route('companies.invoices.list', ['company' => $company]) }}">{{ __('Factures') }}</a>
-            @else
             <a href="{{ route('invoices.list') }}">{{ __('Factures') }}</a>
-            @endif
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <p class="mb-6 font-semibold text-xl">Facture au nom de <a href="{{ route('companies.show', ['company' => (!empty($company) ? $company : $invoice->company)]) }}">{{ (!empty($company) ? $company : $invoice->company)->name }}</a></p>
+            @if(!count($user->company->customers))
+            <p class="mb-6 font-semibold text-xl">Pensez à ajouter un client pour pouvoir envoyer la facture</p>
+            @else
+            <form method="POST" action="{{ route('invoices.update', ['invoice' => $invoice]) }}">
+                @csrf
+
+                <p class="mb-6 font-semibold text-xl">
+                    Facture destinée à
+                    <x-select name="customer_id" class="text-xs">
+                        <option value="">— Choisir un client —</option>
+                        @foreach($user->company->customers as $customer)
+                        <option value="{{ $customer->id }}" {{ old('customer_id', $invoice->customer_id) == $customer->id ? 'selected' : '' }}>{{ $customer->name }}</option>
+                        @endforeach
+                    </x-select>
+                    <x-jet-button type="submit">Mettre à jour</x-jet-button>
+
+                    <a href="{{ route('customers.list') }}#customer-create-form" class="ml-4 inline-flex items-center text-sm font-semibold text-indigo-700">
+                        Nouveau client
+
+                        <span class="ml-1 text-indigo-500">
+                            <svg viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </span>
+                    </a>
+                </p>
+            </form>
+            @endif
 
             <div class="overflow-hidden shadow-xl sm:rounded-lg">
                 @if(empty($invoice->items))
@@ -51,6 +71,8 @@
                 </div>
                 @endif
 
+
+                @if(!$invoice->is_sent)
                 <x-jet-validation-errors class="mb-4" />
 
                 <form method="POST" action="{{ route('invoices.items.add', ['invoice' => $invoice]) }}" class="p-3 border-t border-gray-200">
@@ -106,6 +128,7 @@
                         </x-jet-button>
                     </div>
                 </form>
+                @endif
             </div>
 
             @if(!empty($invoice->items))
@@ -132,6 +155,14 @@
                         </p>
                     </div>
                 </div>
+            </div>
+            @endif
+
+            @if($invoice->ready_to_send)
+            <div class="flex items-right justify-end mt-4">
+                <x-jet-button class="ml-4">
+                    {{ __('Valider la facture') }}
+                </x-jet-button>
             </div>
             @endif
         </div>

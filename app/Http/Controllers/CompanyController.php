@@ -5,30 +5,23 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\CompanyCreateRequest;
+use App\Http\Requests\CompanyUpdateRequest;
 
 use App\Models\Address;
 use App\Models\Company;
 use App\Models\Country;
-use App\Models\Invoice;
-use App\Models\ItemType;
-use App\Models\TaxRate;
 
 class CompanyController extends Controller
 {
-    public function list(Request $request) {
-        $companies = $request->user()->companies()->with(['headquarters_address', 'headquarters_address.country'])->withCount(['invoices'])->get();
+    public function show(Company $company, Request $request) {
+        $company = $request->user()->company;
+        $company->load(['headquarters_address', 'headquarters_address.country', 'addresses', 'addresses.country'])->loadCount(['invoices', 'pending_invoices']);
         $countries = Country::get();
 
-        return view('companies.list', [
-            'companies' => $companies,
-            'countries' => $countries
+        return view('company.show', [
+            'company' => $company,
+            'countries' => $countries,
         ]);
-    }
-
-    public function show(Company $company, Request $request) {
-        $company->load(['addresses'])->loadCount(['invoices']);
-
-        return view('companies.show', ['company' => $company]);
     }
 
     public function create(CompanyCreateRequest $request) {
@@ -50,36 +43,25 @@ class CompanyController extends Controller
         $company->headquarters_address_id = $address->id;
         $company->save();
 
-        return redirect()->route('companies.list');
+        return redirect()->route('company.show');
     }
 
-    public function invoices(Company $company, Request $request) {
-        $invoices = $company->invoices()->with('items')->withCount('items')->get();
+    public function update(CompanyUpdateRequest $request) {
+        $company = $request->user()->company;
 
-        return view('invoices.list', [
-            'company' => $company,
-            'invoices' => $invoices
+        $company->update([
+            'name' => $request->name,
         ]);
-    }
 
-    public function showInvoice(Company $company, Invoice $invoice, Request $request) {
-        $invoice->load(['items'])->loadCount('items');
-
-        $itemTypes = ItemType::get();
-        $taxRates = TaxRate::get();
-
-        return view('invoices.show', [
-            'company' => $company,
-            'invoice' => $invoice,
-            'itemTypes' => $itemTypes,
-            'taxRates' => $taxRates,
-        ]);
-    }
-    public function createInvoice(Company $company) {
-        $invoice = Invoice::create([
+        $company->headquarters_address->update([
             'company_id' => $company->id,
+            'label' => $request->name,
+            'street_address' => $request->street_address,
+            'postal_code' => $request->postal_code,
+            'city' => $request->city,
+            'country_code' => $request->country_code,
         ]);
 
-        return redirect()->route('invoices.show', ['invoice' => $invoice]);
+        return redirect()->route('company.show');
     }
 }
