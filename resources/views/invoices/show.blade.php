@@ -1,7 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            <a href="{{ route('invoices.list') }}">{{ __('Factures') }}</a>
+            <a href="{{ route('companies.show', ['company' => $invoice->company]) }}">{{ $invoice->company->name }}</a> >
+            <a href="{{ route('companies.invoices.list', ['company' => $invoice->company]) }}">{{ __('Factures') }}</a>
         </h2>
     </x-slot>
 

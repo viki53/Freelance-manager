@@ -26,7 +26,7 @@ class InvoiceController extends Controller
     }
 
     public function show(Invoice $invoice, Request $request) {
-        $invoice->load('items')->loadCount('items');
+        $invoice->load(['company', 'items'])->loadCount('items');
 
         $itemTypes = ItemType::get();
         $taxRates = TaxRate::get();

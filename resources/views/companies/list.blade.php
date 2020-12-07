@@ -7,27 +7,30 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            @foreach($companies as $i => $company)
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                @foreach($companies as $i => $company)
-                <div class="{{ $i % 2 == 1 ? 'bg-gray-200' : 'bg-white' }} bg-opacity-25">
-                    <div class="p-6">
-                        <div class="flex items-center">
-                            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-8 h-8 text-gray-400"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold"><a href="{{ route('companies.show', ['company' => $company]) }}">{{ $company->name }}</a></div>
-                        </div>
+                <a href="{{ route('companies.show', ['company' => $company]) }}" class="block p-6">
+                    <div class="flex items-center">
+                        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-8 h-8 text-gray-400"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold"><strong>{{ $company->name }}</strong></div>
+                    </div>
 
-                        <div class="ml-12">
-                            <div class="mt-2 text-sm text-gray-500">
-                                {{ nl2br($company->headquarters_address->street_address) }}<br>
-                                {{ $company->headquarters_address->postal_code }}
-                                {{ $company->headquarters_address->city }}<br>
-                                {{ $company->headquarters_address->country->name }}
-                            </div>
+                    <div class="ml-12">
+                        <div class="mt-2 text-sm text-gray-500">
+                            {{ nl2br($company->headquarters_address->street_address) }}<br>
+                            {{ $company->headquarters_address->postal_code }}
+                            {{ $company->headquarters_address->city }}<br>
+                            {{ $company->headquarters_address->country->name }}
                         </div>
                     </div>
-                </div>
-                @endforeach
+                </a>
+                @if(!empty($company->invoices_count))
+                <a href="{{ route('companies.invoices.list', ['company' => $company]) }}" class="block p-6 border-t border-gray-200 bg-orange-100">
+                    Voir @choice(':count facture|:count factures', $company->invoices_count) en attente
+                </a>
+                @endif
             </div>
+            @endforeach
 
             <x-jet-validation-errors class="mb-4" />
 

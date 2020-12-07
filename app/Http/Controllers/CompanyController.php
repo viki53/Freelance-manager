@@ -13,7 +13,7 @@ use App\Models\Country;
 class CompanyController extends Controller
 {
     public function list(Request $request) {
-        $companies = $request->user()->companies()->with(['headquarters_address', 'headquarters_address.country'])->get();
+        $companies = $request->user()->companies()->with(['headquarters_address', 'headquarters_address.country'])->withCount(['invoices'])->get();
         $countries = Country::get();
 
         return view('companies.list', [
@@ -23,7 +23,7 @@ class CompanyController extends Controller
     }
 
     public function show(Company $company, Request $request) {
-        $company->load(['addresses']);
+        $company->load(['addresses'])->loadCount(['invoices']);
 
         return view('companies.show', ['company' => $company]);
     }
@@ -48,5 +48,21 @@ class CompanyController extends Controller
         $company->save();
 
         return redirect()->route('companies.list');
+    }
+
+    public function invoices(Company $company, Request $request) {
+        $invoices = $company->invoices()->with('items')->withCount('items')->get();
+
+        return view('invoices.list', [
+            'company' => $company,
+            'invoices' => $invoices
+        ]);
+    }
+    public function createInvoice(Company $company, InvoiceCreateRequest $request) {
+        $invoice = Invoice::create([
+            'company_id' => $company->id,
+        ]);
+
+        return redirect()->route('invoices.show', ['invoice' => $invoice]);
     }
 }

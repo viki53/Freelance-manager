@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\InvoiceController;
 
@@ -21,15 +22,13 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function() {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::prefix('companies')->group(function () {
         Route::get('', [CompanyController::class, 'list'])->name('companies.list');
         Route::post('', [CompanyController::class, 'create'])->name('companies.create');
         Route::get('{company:id}', [CompanyController::class, 'show'])->name('companies.show');
-        Route::get('{company:id}/invoices', [CompanyController::class, 'invoices'])->name('companies.invoices');
+        Route::get('{company:id}/invoices', [CompanyController::class, 'invoices'])->name('companies.invoices.list');
         Route::post('{company:id}/invoices', [CompanyController::class, 'createInvoice'])->name('companies.invoices.create');
     });
 
