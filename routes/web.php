@@ -27,9 +27,18 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::prefix('companies')->group(function () {
         Route::get('', [CompanyController::class, 'list'])->name('companies.list');
         Route::post('', [CompanyController::class, 'create'])->name('companies.create');
-        Route::get('{company:id}', [CompanyController::class, 'show'])->name('companies.show');
-        Route::get('{company:id}/invoices', [CompanyController::class, 'invoices'])->name('companies.invoices.list');
-        Route::post('{company:id}/invoices', [CompanyController::class, 'createInvoice'])->name('companies.invoices.create');
+
+        Route::prefix('{company:id}')->group(function () {
+            Route::get('', [CompanyController::class, 'show'])->name('companies.show');
+
+            Route::prefix('invoices')->group(function () {
+                Route::get('', [CompanyController::class, 'invoices'])->name('companies.invoices.list');
+                Route::post('', [CompanyController::class, 'createInvoice'])->name('companies.invoices.create');
+                Route::prefix('{invoice:id}')->group(function () {
+                    Route::get('', [CompanyController::class, 'showInvoice'])->name('companies.invoices.show');
+                });
+            });
+        });
     });
 
     Route::prefix('invoices')->group(function () {

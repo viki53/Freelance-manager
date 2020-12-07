@@ -16,11 +16,9 @@ use App\Models\TaxRate;
 class InvoiceController extends Controller
 {
     public function list(Request $request) {
-        $company = $request->user()->default_company;
-        $invoices = $company->invoices()->with('items')->withCount('items')->get();
+        $invoices = $request->user()->invoices()->with('items')->withCount('items')->get();
 
         return view('invoices.list', [
-            'company' => $company,
             'invoices' => $invoices
         ]);
     }
@@ -40,7 +38,7 @@ class InvoiceController extends Controller
 
     public function create(InvoiceCreateRequest $request) {
         $invoice = Invoice::create([
-            'company_id' => $request->company_id ?: $request->user()->default_company->id,
+            'company_id' => $request->user()->default_company->id,
         ]);
 
         return redirect()->route('invoices.show', ['invoice' => $invoice]);

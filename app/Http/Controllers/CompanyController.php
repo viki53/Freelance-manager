@@ -9,6 +9,9 @@ use App\Http\Requests\CompanyCreateRequest;
 use App\Models\Address;
 use App\Models\Company;
 use App\Models\Country;
+use App\Models\Invoice;
+use App\Models\ItemType;
+use App\Models\TaxRate;
 
 class CompanyController extends Controller
 {
@@ -58,7 +61,21 @@ class CompanyController extends Controller
             'invoices' => $invoices
         ]);
     }
-    public function createInvoice(Company $company, InvoiceCreateRequest $request) {
+
+    public function showInvoice(Company $company, Invoice $invoice, Request $request) {
+        $invoice->load(['items'])->loadCount('items');
+
+        $itemTypes = ItemType::get();
+        $taxRates = TaxRate::get();
+
+        return view('invoices.show', [
+            'company' => $company,
+            'invoice' => $invoice,
+            'itemTypes' => $itemTypes,
+            'taxRates' => $taxRates,
+        ]);
+    }
+    public function createInvoice(Company $company) {
         $invoice = Invoice::create([
             'company_id' => $company->id,
         ]);

@@ -24,7 +24,7 @@ class InvoiceCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'company_id' => 'exists:App\Models\Company,id'
+            // 'company_id' => 'exists:App\Models\Company,id'
         ];
     }
 }
