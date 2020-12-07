@@ -33,7 +33,7 @@
                                 @money_format($item->untaxed_price, 'EUR')&nbsp;<acronym title="Hors taxes">HT</acronym>
                             </p>
                             <p class="p-2 flex justify-end">
-                                @money_format($item->taxes_price, 'EUR')&nbsp;(<acronym title="Taxe sur la Valeur Ajoutée">TVA</acronym>&nbsp;@percentage_format($item->tax_rate->percentage / 100))
+                                @money_format($item->taxes_price, 'EUR')&nbsp;(<acronym title="Taxe sur la Valeur Ajoutée">TVA</acronym>&nbsp;@number_format($item->tax_rate->percentage) %)
                             </p>
                             <p class="p-2 flex justify-end">
                                 @money_format($item->taxed_price, 'EUR')&nbsp;<acronym title="Toutes Taxes Comprises">TTC</acronym>
@@ -86,7 +86,7 @@
                                 <x-jet-label for="tax_rate_id" value="{{ __('Taxe') }}" />
                                 <x-select id="tax_rate_id" class="block mt-1 w-full" type="text" name="tax_rate_id" :value="old('tax_rate_id')" required autocomplete="off">
                                     @foreach($taxRates as $rate)
-                                    <option value="{{ $rate->id }}">{{ $rate->label }} ({{ $rate->percentage }})</option>
+                                    <option value="{{ $rate->id }}">{{ $rate->label }} (@number_format($rate->percentage) %)</option>
                                     @endforeach
                                 </x-select>
                             </div>
@@ -109,7 +109,8 @@
                             <strong>Total</strong>
                         </p>
                         <p class="p-3 ph-2 flex justify-center">
-                            {{ $invoice->quantity_total }} @choice('élément|éléments', $invoice->quantity_total)
+                            @number_format($invoice->quantity_total)
+                            @choice('élément|éléments', $invoice->quantity_total)
                         </p>
                     </div>
                     <div class="grid grid-cols-3">
