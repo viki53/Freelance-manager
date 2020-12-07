@@ -2,8 +2,8 @@
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             @if(!empty($company))
-            <a href="{{ route('companies.show', ['company' => $invoice->company]) }}">{{ $invoice->company->name }}</a> >
-            <a href="{{ route('companies.invoices.list', ['company' => $invoice->company]) }}">{{ __('Factures') }}</a>
+            <a href="{{ route('companies.show', ['company' => $company]) }}">{{ $company->name }}</a> >
+            <a href="{{ route('companies.invoices.list', ['company' => $company]) }}">{{ __('Factures') }}</a>
             @else
             <a href="{{ route('invoices.list') }}">{{ __('Factures') }}</a>
             @endif
@@ -12,6 +12,8 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <p class="mb-6 font-semibold text-xl">Facture au nom de <a href="{{ route('companies.show', ['company' => (!empty($company) ? $company : $invoice->company)]) }}">{{ (!empty($company) ? $company : $invoice->company)->name }}</a></p>
+
             <div class="overflow-hidden shadow-xl sm:rounded-lg">
                 @if(empty($invoice->items))
                 <div class="bg-orange-200 p-8">
