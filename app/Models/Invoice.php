@@ -17,6 +17,7 @@ class Invoice extends Model
 
     protected $fillable = [
         'company_id',
+        'customer_id',
         'rebate_percentage',
         'rebate_amount',
         'discount',

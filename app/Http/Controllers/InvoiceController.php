@@ -21,13 +21,15 @@ class InvoiceController extends Controller
         $invoices = $request->user()->invoices()->with('items')->withCount('items')->get();
 
         return view('invoices.list', [
-            'invoices' => $invoices
+            'user' => $request->user(),
+            'invoices' => $invoices,
         ]);
     }
 
     public function create(InvoiceCreateRequest $request) {
         $invoice = Invoice::create([
             'company_id' => $request->user()->company->id,
+            'customer_id' => $request->customer_id,
         ]);
 
         return redirect()->route('invoices.show', ['invoice' => $invoice]);

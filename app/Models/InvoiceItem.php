@@ -18,7 +18,6 @@ class InvoiceItem extends Model
         'description',
         'quantity',
         'unit_price',
-        'percentage',
         'item_type_id',
         'tax_rate_id',
     ];
@@ -26,7 +25,7 @@ class InvoiceItem extends Model
     protected $casts = [
         'quantity' => 'decimal:2',
         'unit_price' => 'decimal:2',
-        'percentage' => 'decimal:2',
+        'untaxed_price' => 'decimal:2',
     ];
 
     public function getTaxesPriceAttribute() {

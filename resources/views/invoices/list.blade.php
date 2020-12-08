@@ -37,6 +37,16 @@
                 @csrf
 
                 <div class="flex items-center justify-end mt-4">
+                    <div class="inline-flex">
+                        <label for="customer_id" class="py-2">Facture destinée à</label>
+                        <x-select id="customer_id" name="customer_id" class="text-xs ml-2">
+                            <option value="">— Choisir un client —</option>
+                            @foreach($user->company->customers as $customer)
+                            <option value="{{ $customer->id }}" {{ old('customer_id', $invoice->customer_id) == $customer->id ? 'selected' : '' }}>{{ $customer->name }}</option>
+                            @endforeach
+                        </x-select>
+                    </div>
+
                     <x-jet-button class="ml-4">
                         {{ __('Nouvelle facture') }}
                     </x-jet-button>
