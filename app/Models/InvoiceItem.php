@@ -29,10 +29,6 @@ class InvoiceItem extends Model
         'percentage' => 'decimal:2',
     ];
 
-    public function getUntaxedPriceAttribute() {
-        return $this->quantity * $this->unit_price;
-    }
-
     public function getTaxesPriceAttribute() {
         return $this->untaxed_price * ($this->tax_rate->percentage ?: 100) / 100;
     }
