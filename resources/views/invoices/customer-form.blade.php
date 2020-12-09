@@ -13,7 +13,7 @@
         </x-select>
         <noscript><x-jet-button type="submit">Valider</x-jet-button></noscript>
 
-        <a href="{{ route('customers.list') }}#customer-create-form" class="ml-4 inline-flex items-center text-sm font-semibold text-indigo-700">
+        <a href="{{ route('customers.list', ['invoice_id' => $invoice->id]) }}#customer-create-form" class="ml-4 inline-flex items-center text-sm font-semibold text-indigo-700">
             Nouveau client
 
             <span class="ml-1 text-indigo-500">

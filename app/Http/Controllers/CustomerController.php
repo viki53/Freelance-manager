@@ -8,6 +8,7 @@ use App\Http\Requests\CustomerCreateRequest;
 use App\Models\Address;
 use App\Models\Company;
 use App\Models\Country;
+use App\Models\Invoice;
 
 class CustomerController extends Controller
 {
@@ -17,7 +18,8 @@ class CustomerController extends Controller
 
         return view('customers.list', [
             'customers' => $customers,
-            'countries' => $countries
+            'countries' => $countries,
+            'invoice_id' => $request->get('invoice_id')
         ]);
     }
 
@@ -35,7 +37,7 @@ class CustomerController extends Controller
         ]);
 
         $address = Address::create([
-            'company_id' => $company->id,
+            'company_id' => $customer->id,
             'label' => $request->name,
             'street_address' => $request->street_address,
             'postal_code' => $request->postal_code,
@@ -45,6 +47,16 @@ class CustomerController extends Controller
 
         $customer->headquarters_address_id = $address->id;
         $customer->save();
+
+        if (!empty($request->invoice_id)) {
+            $invoice = Invoice::find($request->invoice_id);
+            if (!empty($invoice)) {
+                $invoice->customer_id = $customer->id;
+                $invoice->save();
+
+                return redirect()->route('invoices.show', ['invoice' => $invoice]);
+            }
+        }
 
         return redirect()->route('customers.show', ['customer' => $customer]);
     }

@@ -37,6 +37,10 @@
 
                 <x-jet-validation-errors class="mb-4" />
 
+                @if(!empty($invoice_id))
+                <input type="hidden" name="invoice_id" value="{{ $invoice_id }}">
+                @endif
+
                 <div>
                     <x-jet-label for="name" value="{{ __('Nom') }}" />
                     <x-jet-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autocomplete="organization" />
