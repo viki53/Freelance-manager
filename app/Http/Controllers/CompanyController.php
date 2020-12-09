@@ -28,7 +28,6 @@ class CompanyController extends Controller
         $company = Company::create([
             'name' => $request->name,
             'owner_id' => $request->user()->id,
-            'headquarters_adress_id' => null,
         ]);
 
         $address = Address::create([
@@ -54,7 +53,6 @@ class CompanyController extends Controller
         ]);
 
         $company->headquarters_address->update([
-            'company_id' => $company->id,
             'label' => $request->name,
             'street_address' => $request->street_address,
             'postal_code' => $request->postal_code,

@@ -56,8 +56,8 @@ class InvoiceController extends Controller
         return redirect()->route('invoices.show', ['invoice' => $invoice]);
     }
 
-    public function send(Invoice $invoice, Request $request) {
-        $invoice->sent_at = Carbon::now();
+    public function send(Invoice $invoice, InvoiceSendRequest $request) {
+        $invoice->sent_at = $request->date ? $request->date : Carbon::now();
         $invoice->save();
 
         return redirect()->route('invoices.show', ['invoice' => $invoice]);

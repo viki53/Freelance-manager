@@ -57,6 +57,9 @@
             </div>
 
             @foreach($company->addresses as $i => $address)
+            @if($address->id === $company->headquarters_address_id)
+            @continue
+            @endif
             <div class="mt-8 bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <a href="{{ route('company.show', ['company' => $company]) }}" class="block p-6">
                     <div class="flex items-center">
