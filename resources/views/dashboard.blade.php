@@ -18,7 +18,11 @@
                     </div>
 
                     <div class="mt-6 text-gray-500">
-                        Vous avez @choice(':count facture|:count factures', $user->company->pending_invoices_count) en attente
+                        @if ($user->company->pending_invoices_count > 0)
+                        <p>Vous avez @choice(':count facture|:count factures', $user->company->pending_invoices_count) en attente</p>
+                        @else
+                        <p>Aucune facture en attence</p>
+                        @endif
                     </div>
                 </div>
 

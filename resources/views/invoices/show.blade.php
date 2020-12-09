@@ -7,32 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            @if(!count($user->company->customers))
-            <p class="mb-6 font-semibold text-xl">Pensez à ajouter un client pour pouvoir envoyer la facture</p>
-            @else
-            <form method="POST" action="{{ route('invoices.update', ['invoice' => $invoice]) }}">
-                @csrf
-
-                <p class="mb-6 font-semibold text-xl">
-                    <label for="customer_id">Facture destinée à</label>
-                    <x-select id="customer_id" name="customer_id" class="text-xs ml-2">
-                        <option value="">— Choisir un client —</option>
-                        @foreach($user->company->customers as $customer)
-                        <option value="{{ $customer->id }}" {{ old('customer_id', $invoice->customer_id) == $customer->id ? 'selected' : '' }}>{{ $customer->name }}</option>
-                        @endforeach
-                    </x-select>
-                    <x-jet-button type="submit">Mettre à jour</x-jet-button>
-
-                    <a href="{{ route('customers.list') }}#customer-create-form" class="ml-4 inline-flex items-center text-sm font-semibold text-indigo-700">
-                        Nouveau client
-
-                        <span class="ml-1 text-indigo-500">
-                            <svg viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                        </span>
-                    </a>
-                </p>
-            </form>
-            @endif
+            @livewire('invoice.customer-form', ['invoice' => $invoice, 'company' => $user->company])
 
             <div class="overflow-hidden shadow-xl sm:rounded-lg">
                 @if(empty($invoice->items))
@@ -158,13 +133,7 @@
             </div>
             @endif
 
-            @if($invoice->ready_to_send)
-            <div class="flex items-right justify-end mt-4">
-                <x-jet-button class="ml-4">
-                    {{ __('Valider la facture') }}
-                </x-jet-button>
-            </div>
-            @endif
+            @livewire('invoice.send-form', ['invoice' => $invoice])
         </div>
     </div>
 </x-app-layout>
