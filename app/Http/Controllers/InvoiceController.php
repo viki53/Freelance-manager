@@ -18,11 +18,13 @@ use App\Models\TaxRate;
 class InvoiceController extends Controller
 {
     public function list(Request $request) {
-        $invoices = $request->user()->invoices()->with('items')->withCount('items')->get();
+        $invoices = $request->user()->invoices()->orderBy('created_at', 'desc')->with('items')->withCount('items')->get();
+        $archived_invoices = $request->user()->invoices()->onlyTrashed()->orderBy('deleted_at', 'desc')->with('items')->withCount('items')->get();
 
         return view('invoices.list', [
             'user' => $request->user(),
             'invoices' => $invoices,
+            'archived_invoices' => $archived_invoices,
         ]);
     }
 
@@ -76,5 +78,15 @@ class InvoiceController extends Controller
         $invoice->save();
 
         return redirect()->route('invoices.show', ['invoice' => $invoice]);
+    }
+
+    public function delete(Invoice $invoice) {
+        $invoice->delete();
+        return redirect()->route('invoices.list');
+    }
+
+    public function restore($invoiceId) {
+        Invoice::onlyTrashed()->findOrFail($invoiceId)->restore();
+        return redirect()->route('invoices.list');
     }
 }

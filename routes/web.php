@@ -46,6 +46,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
         Route::prefix('{invoice:id}')->group(function () {
             Route::get('', [InvoiceController::class, 'show'])->name('invoices.show');
             Route::post('', [InvoiceController::class, 'update'])->name('invoices.update');
+            Route::get('delete', [InvoiceController::class, 'delete'])->name('invoices.delete');
+            Route::get('restore', [InvoiceController::class, 'restore'])->name('invoices.restore');
             Route::post('send', [InvoiceController::class, 'send'])->name('invoices.send');
             Route::post('items', [InvoiceController::class, 'addItem'])->name('invoices.items.add');
         });
