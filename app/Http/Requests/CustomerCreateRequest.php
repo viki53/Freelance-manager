@@ -24,6 +24,7 @@ class CustomerCreateRequest extends FormRequest
     public function rules()
     {
         return [
+            'invoice_id' => 'nullable|exists:App\Models\Invoice,id',
             'name' => 'required|string',
             'street_address' => 'required|string',
             'postal_code' => 'required|string|size:5',
