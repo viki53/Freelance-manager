@@ -24,7 +24,7 @@ class InvoiceCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'customer_id' => 'exists:App\Models\Company,id'
+            'customer_id' => 'nullable|exists:App\Models\Company,id'
         ];
     }
 }
