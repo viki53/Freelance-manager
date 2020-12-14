@@ -67,7 +67,7 @@ class Invoice extends Model
     }
 
     public function getIsSentAttribute() {
-        return !empty($this->sent_at) && $this->sent_at > Carbon::now();
+        return !empty($this->sent_at);
     }
 
     public function getIsReadyToSendAttribute() {

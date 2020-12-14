@@ -17,27 +17,28 @@
                 @else
                 <div class="bg-white">
                     @foreach($invoice->items as $i => $item)
-                    <div class="{{ $i % 2 == 1 ? 'bg-gray-200' : 'bg-white' }} bg-opacity-25 grid grid-cols-1 md:grid-cols-2">
-                        <div class="grid grid-cols-2">
+                    <div class="{{ $i % 2 == 1 ? 'bg-gray-200' : 'bg-white' }} bg-opacity-25 flex">
+                        <div class="w-full md:w-4/6">
                             <div class="p-2">
                                 <p><strong>{{ $item->label }}</strong></p>
-                                <p class="mt-2">{{ $item->description }}</p>
+                                @if(!empty($item->description))
+                                <p class="mt-2">{!! nl2br(e($item->description)) !!}</p>
+                                @endif
                             </div>
-                            <p class="p-2 flex justify-center">
-                                @number_format($item->quantity)
-                                @choice($item->item_type->label_singular.'|'.$item->item_type->label_plural, $item->quantity)
-                                à
-                                @money_format($item->unit_price, 'EUR')
-                            </p>
                         </div>
-                        <div class="grid grid-cols-3">
-                            <p class="p-2 flex justify-end">
-                                @money_format($item->untaxed_price, 'EUR')&nbsp;<acronym title="Hors taxes">HT</acronym>
-                            </p>
-                            <p class="p-2 flex justify-end">
-                                @money_format($item->taxes_price, 'EUR')&nbsp;(<acronym title="Taxe sur la Valeur Ajoutée">TVA</acronym>&nbsp;@number_format($item->tax_rate->percentage) %)
-                            </p>
-                            <p class="p-2 flex justify-end">
+                        <div class="w-full md:w-2/6 grid grid-cols-1 md:grid-cols-2">
+                            <div class="p-2 text-right">
+                                <p>
+                                    @number_format($item->quantity)
+                                    @choice($item->item_type->label_singular.'|'.$item->item_type->label_plural, $item->quantity)
+                                    à
+                                    @money_format($item->unit_price, 'EUR')
+                                </p>
+                                <p>
+                                    <acronym title="Taxe sur la Valeur Ajoutée">TVA</acronym>&nbsp;@number_format($item->tax_rate->percentage) %
+                                </p>
+                            </div>
+                            <p class="p-2 text-right">
                                 @money_format($item->taxed_price, 'EUR')&nbsp;<acronym title="Toutes Taxes Comprises">TTC</acronym>
                             </p>
                         </div>
@@ -108,27 +109,29 @@
 
             @if(!empty($invoice->items))
             <div class="mt-8 bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <div class="grid grid-cols-1 md:grid-cols-2">
-                    <div class="grid grid-cols-2">
-                        <p class="p-3 ph-2">
-                            <strong>Total</strong>
-                        </p>
-                        <p class="p-3 ph-2 flex justify-center">
-                            @number_format($invoice->quantity_total)
-                            @choice('élément|éléments', $invoice->quantity_total)
-                        </p>
-                    </div>
-                    <div class="grid grid-cols-3">
-                        <p class="p-3 flex justify-end">
-                            @money_format($invoice->untaxed_total, 'EUR')&nbsp;<acronym title="Hors taxes">HT</acronym>
-                        </p>
-                        <p class="p-3 flex justify-end">
-                            @money_format($invoice->taxes_total, 'EUR')&nbsp;<acronym title="Taxe sur la Valeur Ajoutée">TVA</acronym>
-                        </p>
-                        <p class="p-3 flex justify-end">
-                            @money_format($invoice->taxed_total, 'EUR')&nbsp;<acronym title="Toutes Taxes Comprises">TTC</acronym>
-                        </p>
-                    </div>
+                <div class="flex">
+                    <p class="p-3 ph-2 text-right w-1/2 md:w-5/6">
+                        <strong>Total <acronym title="Hors taxes">HT</acronym></strong>
+                    </p>
+                    <p class="p-3 ph-2 text-right w-1/2 md:w-1/6">
+                        @money_format($invoice->untaxed_total, 'EUR')
+                    </p>
+                </div>
+                <div class="flex">
+                    <p class="p-3 ph-2 text-right w-1/2 md:w-5/6">
+                        <strong><acronym title="Taxe sur la Valeur Ajoutée">TVA</acronym></strong>
+                    </p>
+                    <p class="p-3 ph-2 text-right w-1/2 md:w-1/6">
+                        @money_format($invoice->taxes_total, 'EUR')
+                    </p>
+                </div>
+                <div class="flex">
+                    <p class="p-3 ph-2 text-right w-1/2 md:w-5/6">
+                        <strong>Total <acronym title="Toutes Taxes Comprises">TTC</acronym></strong>
+                    </p>
+                    <p class="p-3 ph-2 text-right w-1/2 md:w-1/6">
+                        @money_format($invoice->taxed_total, 'EUR')
+                    </p>
                 </div>
             </div>
             @endif

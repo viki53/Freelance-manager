@@ -1,5 +1,5 @@
 @if($invoice->is_ready_to_send)
-<form method="POST" action="{{ route('invoices.send', ['invoice' => $invoice]) }}" wire:submit.prevent="send" id="invoice-send-form" class="mt-8 mb-6 flex items-right justify-end">
+<form method="POST" action="{{ route('invoices.send', ['invoice' => $invoice]) }}" id="invoice-send-form" class="mt-8 mb-6 flex items-right justify-end">
     @csrf
     <div class="font-semibold">
         <p>
@@ -25,4 +25,8 @@
 <p class="mt-8 bg-blue-500 text-white p-2 rounded">Cette facture sera envoyée le {{ $invoice->sent_at->isoFormat('D MMMM YYYY \à HH\hmm') }}</p>
 @elseif($invoice->is_sent && $invoice->sent_at > $today)
 <p class="mt-8 bg-blue-500 text-white p-2 rounded">Cette facture a déjà été envoyée le {{ $invoice->sent_at->isoFormat('D MMMM YYYY \à HH\hmm') }}</p>
+@endif
+
+@if($invoice->is_sent)
+<p class="my-4 text-right"><a href="{{ route('invoices.download', ['invoice' => $invoice]) }}" class="px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150">Télécharger</a></p>
 @endif

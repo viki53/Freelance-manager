@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <x-jet-validation-errors class="mb-4" />
 
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+            <div class="mb-8 bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <form method="POST" action="{{ route('company.update') }}" class="p-4">
                     @csrf
 
@@ -60,7 +60,7 @@
             @if($address->id === $company->headquarters_address_id)
             @continue
             @endif
-            <div class="mt-8 bg-white overflow-hidden shadow-xl sm:rounded-lg">
+            <div class="mb-3 bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <a href="{{ route('company.show', ['company' => $company]) }}" class="block p-6">
                     <div class="flex items-center">
                         @if($address->id == $company->headquarters_address_id)
@@ -73,7 +73,7 @@
 
                     <div class="ml-12">
                         <div class="mt-2 text-sm text-gray-500">
-                            {{ nl2br($address->street_address) }}<br>
+                            {!! nl2br(e($address->street_address)) !!}<br>
                             {{ $address->postal_code }}
                             {{ $address->city }}<br>
                             {{ $address->country->name }}

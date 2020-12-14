@@ -29,7 +29,7 @@ class SendForm extends Component
     }
 
     public function send() {
-        $this->invoice->sent_at = $this->date ? new Carbon($this->date) : Carbon::now();
+        $this->invoice->sent_at = !empty($this->date) ? new Carbon($this->date) : Carbon::now();
         $this->invoice->save();
 
         return redirect()->route('invoices.show', ['invoice' => $this->invoice]);
